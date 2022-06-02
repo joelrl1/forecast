@@ -62,7 +62,8 @@ async function loadWind(url) {
         lineWidth: 2,
         displayOptions: {
             velocityType: "",
-            directionString: "Windgeschwindigkeit",
+            directionString: "Windrichtung",
+            speedString: "Windgeschwindigkeit",
             speedUnit: "k/h",
             emptyString: "keine Daten vorhanden",
             position: "bottomright"
@@ -110,7 +111,7 @@ async function loadWeather(url) {
     `;
 
     // Wettericons
-    
+
     let symbol = jsondata.properties.timeseries[0].data.next_1_hours.summary.symbol_code;
     popup += `<img src="icons/${symbol}.svg" alt="${symbol}" style="width:32px">`;
 
