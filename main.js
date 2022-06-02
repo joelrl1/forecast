@@ -54,6 +54,8 @@ async function loadWind(url) {
     
     let forecastLabel = formatDate(forecastDate);
    // console.log("Vorhersagezeitpunkt", forecastLabel);
+
+   layerControl.addOverlay(overlays.wind, `ECMF Windvorhersage für ${forecastLabel}`),
 };
 loadWind("https://geographie.uibk.ac.at/webmapping/ecmwf/data/wind-10u-10v-europe.json");
 
