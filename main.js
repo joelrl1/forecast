@@ -30,7 +30,7 @@ L.control.scale({
 
 // Datum formatieren
 
-let formatDate = function(date) {
+let formatDate = function (date) {
     return date.toLocaleDateString("de-AT", {
         month: "long",
         day: "numeric",
@@ -44,18 +44,30 @@ async function loadWind(url) {
     const jsondata = await response.json();
     //console.log("Jsondaten", jsondata);
     //console.log("Zeitpunkt Erstellung", jsondata[0].header.refTime);
-   // console.log("Zeitpunkt Vorhersage (+Stunden)", jsondata[0].header.forecastTime);
+    // console.log("Zeitpunkt Vorhersage (+Stunden)", jsondata[0].header.forecastTime);
 
     let forecastDate = new Date(jsondata[0].header.refTime);
-   // console.log("Echtes Datum Erstellung", forecastDate);
+    // console.log("Echtes Datum Erstellung", forecastDate);
     forecastDate.setHours(forecastDate.getHours() + jsondata[0].header.forecastTime);
-   // console.log("Echtes Datum Vorhersage", forecastDate);
+    // console.log("Echtes Datum Vorhersage", forecastDate);
 
-    
+
     let forecastLabel = formatDate(forecastDate);
-   // console.log("Vorhersagezeitpunkt", forecastLabel);
+    // console.log("Vorhersagezeitpunkt", forecastLabel);
 
-   layerControl.addOverlay(overlays.wind, `ECMF Windvorhersage für ${forecastLabel}`),
+    layerControl.addOverlay(overlays.wind, `ECMF Windvorhersage für ${forecastLabel}`);
+
+    L.velocityLayer({
+        data: jsondata,
+        lineWidth: 2,
+        displayOptions: {
+            velocityType: "",
+            directionString: "Windgeschwindigkeit",
+            speedUnit: "k/h",
+            emptyString: "keine Daten vorhanden",
+            position: "bottomright"
+        }
+    }).addTo(overlays.wind);
 };
 loadWind("https://geographie.uibk.ac.at/webmapping/ecmwf/data/wind-10u-10v-europe.json");
 
