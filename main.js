@@ -75,15 +75,15 @@ loadWind("https://geographie.uibk.ac.at/webmapping/ecmwf/data/wind-10u-10v-europ
 // Wettervorhersage
 layerControl.addOverlay(overlays.weather, "Wettervorhersage met.no");
 
-let marker= L.circleMarker([47.267222,11.392778 ]).bindPopup("Wettervorhersage").addTo(overlays.weather);
+let marker = L.circleMarker([47.267222, 11.392778]).bindPopup("Wettervorhersage").addTo(overlays.weather);
 
 
 async function loadWeather(url) {
     const response = await fetch(url);
     const jsondata = await response.json();
 
-     // Marker positionieren
-     marker.setLatLng([
+    // Marker positionieren
+    marker.setLatLng([
         jsondata.geometry.coordinates[1],
         jsondata.geometry.coordinates[0]
     ]);
@@ -112,19 +112,22 @@ async function loadWeather(url) {
 
     // Wettericons
 
-   // Wettericons
-   for (let i=0; i <= 24; i+=3) {
-    let symbol = jsondata.properties.timeseries[i].data.next_1_hours.summary.symbol_code;
-    popup += `<img src="icons/${symbol}.svg" alt="${symbol}" style="width:32px">`;
-}
+    // Wettericons
+    for (let i = 0; i <= 24; i += 3) {
+        let symbol = jsondata.properties.timeseries[i].data.next_1_hours.summary.symbol_code;
+        let forecastDate = new Date(jsondata.properties.timeseries[i].time);
+        let forecastLabel = formatDate(forecastDate);
+
+        popup += `<img src="icons/${symbol}.svg" title="${forecastLabel}" alt="${symbol}" style="width:32px">`;
+    }
 
     marker.setPopupContent(popup).openPopup();
 
-    
+
 };
 loadWeather("https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=47.267222&lon=11.392778");
 // auf Klick auf die Karte reagieren
-map.on("click", function(evt) {
+map.on("click", function (evt) {
     //console.log(evt);
 
     let url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${evt.latlng.lat}&lon=${evt.latlng.lng}`;
